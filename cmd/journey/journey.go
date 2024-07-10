@@ -16,6 +16,7 @@ import (
 	"github.com/phenpessoa/gutils/netutils/httputils"
 	"github.com/raphaelmb/go-journey/internal/api"
 	"github.com/raphaelmb/go-journey/internal/api/spec"
+	"github.com/raphaelmb/go-journey/internal/mailer/mailpit"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -60,7 +61,7 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	si := api.NewApi(pool, logger)
+	si := api.NewApi(pool, logger, mailpit.NewMailPit(pool))
 	r := chi.NewMux()
 	r.Use(middleware.RequestID, middleware.Recoverer, httputils.ChiLogger(logger))
 	r.Mount("/", spec.Handler(si))
