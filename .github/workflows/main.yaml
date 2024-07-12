@@ -1,18 +1,24 @@
 name: CI
 
 on:
-    #push:
-        #branches: ["main"]
-    workflow_dispatch:
+  #push:
+      #branches: ["main"]
+  workflow_dispatch:
 
 jobs:
-    build-and-push:
-        name: "Build and push"
-        runs-on: ubuntu-latest
+  build-and-push:
+    name: "Build and push"
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
         
-        - name: Build Docker image
-          run: docker build -t raphaelmb/go-journey:latest -f Dockerfile.prod .  
+    - name: Generate SHA
+      id: generate_sha
+      run: |
+        SHA=$(echo $GITHUB_SHA | head -c7)
+        echo "sha=$SHA" >> $GITHUB_OUTPUT
+    
+    - name: Build Docker image
+      run: docker build -t raphaelmb/go-journey:${{ steps.generate_sha.outputs.sha }} -f Dockerfile.prod .  
