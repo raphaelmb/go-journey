@@ -26,5 +26,11 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - name: Build Docker image
-      run: docker build -t raphaelmb/go-journey:${{ steps.generate_sha.outputs.sha }} -f Dockerfile.prod .  
+    - name: Build and Push
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: |
+          raphaelmb/go-journey:${{ steps.generate_sha.outputs.sha }}
+          raphaelmb/go-journey:latest
