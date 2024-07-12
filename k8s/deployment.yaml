@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: journey-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: journey
+  template:
+    metadata:
+      labels:
+        app: journey
+    spec:
+      containers:
+      - name: journey 
+        image: raphaelmb/go-journey:c94d885
+        env:
+          - name: JOURNEY_DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-connection
+                key: db_user
+          - name: JOURNEY_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-connection
+                key: db_password
+          - name: JOURNEY_DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: db-connection
+                key: db_host
+          - name: JOURNEY_DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: db-connection
+                key: db_port
+          - name: JOURNEY_DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: db-connection
+                key: db_name
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        ports:
+          - containerPort: 8080

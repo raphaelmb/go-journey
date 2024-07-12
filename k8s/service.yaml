@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: journey-service
+spec:
+  selector:
+    app: journey
+  type: ClusterIP
+  ports:
+  - name: journey-service
+    port: 80
+    targetPort: 8080
+    protocol: TCP
